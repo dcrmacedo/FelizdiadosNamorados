@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Feliz Dia dos Namorados</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', cursive;
+      background: #ffd6e7;
+      overflow-x: hidden;
+    }
+
+    .hearts {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: float 10s linear infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) rotate(45deg);
+        opacity: 0;
+      }
+    }
+
+    .intro {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffd6e7;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      transition: opacity 1s ease;
+    }
+
+    .intro.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .intro h1 {
+      color: #b30059;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: #b30059;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    @media (min-width: 768px) {
+      header {
+        font-size: 2.5rem;
+      }
+    }
+
+    .slideshow {
+      width: 100%;
+      max-width: 600px;
+      margin: auto;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .slides {
+      display: flex;
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+
+    .slides img,
+    .slides video {
+      width: 100%;
+      display: none;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .btn {
+      display: block;
+      margin: 2rem auto;
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      background-color: #ff66a3;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    .btn:hover {
+      background-color: #e60073;
+    }
+
+    .final-message {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 1.8rem;
+      color: #b30059;
+      font-weight: bold;
+    }
+
+    .final-message .sub {
+      display: block;
+      font-size: 1.2rem;
+      margin-top: 0.5rem;
+      color: #800040;
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="intro" id="intro">
+    <h1>💌💘</h1>
+    <button class="btn" onclick="startPresentation()">Click aqui</button>
+  </div>
+
+  <header>
+    Feliz Dia dos Namorados 💖🥰
+  </header>
+
+  <div class="slideshow">
+    <div class="slides" id="slides">
+      <img src="./pasta/raissa01.jpeg" alt="Foto 1">
+      <img src="./pasta/juntos.webp" alt="Foto 2">
+      <img src="./pasta/raissa02.jpeg   " alt="Foto 3">
+      <img src="./pasta/raissa03.jpeg" alt="Foto 4">
+      <video src="./pasta/video01.mp4" autoplay muted loop></video>
+      <img src="./pasta/raissa04.jpeg" alt="Foto 5">
+      <img src="./pasta/raissa05.jpeg" alt="Foto 6">
+      <img src="./pasta/nos.jpeg" alt="Foto 6">
+      <img src="./pasta/raissa06.jpeg" alt="Foto 7">
+      <video src="./pasta/video.mp4" autoplay muted loop></video>
+    </div>
+  </div>
+
+  <div class="final-message">
+    Parabéns Para a Gente Meu amor ✨<br>
+    <span class="sub">Juntos para sempre</span>
+  </div>
+
+  <button class="btn" onclick="toggleMusic()">Tocar/Pausar Música</button>
+  
+
+  <audio id="bg-music" src="./pasta/exagerado.mp3" autoplay loop></audio>
+
+  <script>
+    let currentIndex = 0;
+    let slides;
+    let interval;
+    const slideDuration = 5000; // 5 segundos por slide
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.display = (i === index) ? 'block' : 'none';
+      });
+    }
+
+    function startPresentation() {
+      document.getElementById('intro').classList.add('hidden');
+      slides = document.querySelectorAll('.slides img, .slides video');
+      showSlide(currentIndex);
+
+      interval = setInterval(() => {
+        currentIndex++;
+        showSlide(currentIndex);
+
+        if (currentIndex >= slides.length - 1) {
+          clearInterval(interval);
+        }
+      }, slideDuration);
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+      document.getElementById('hearts').appendChild(heart);
+
+      setTimeout(() => heart.remove(), 10000);
+    }
+
+    setInterval(createHeart, 300);
+
+    function toggleMusic() {
+      const music = document.getElementById('bg-music');
+      if (music.paused) {
+        music.play();
+      } else {
+        music.pause();
+      }
+    }
+  </script>
+</body>
+</html>
